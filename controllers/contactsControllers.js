@@ -42,10 +42,21 @@ const updateContact = async (req, res) => {
   res.json(result);
 };
 
+const updateContactStatus = async (req, res) => {
+  const { id } = req.params;
+  const result = await contactsService.updateContactStatus(id, req.body);
+  console.log(result);
+  if (!result) {
+    throw HttpError(404, `Contact with id: ${id} not found`);
+  }
+  res.json(result);
+};
+
 export default {
   getAllContacts: ctrlWrapper(getAllContacts),
   getOneContact: ctrlWrapper(getOneContact),
   deleteContact: ctrlWrapper(deleteContact),
   createContact: ctrlWrapper(createContact),
   updateContact: ctrlWrapper(updateContact),
+  updateContactStatus: ctrlWrapper(updateContactStatus),
 };

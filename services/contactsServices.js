@@ -10,3 +10,6 @@ export const removeContact = async (contactId) =>
 export const addContact = (data) => Contact.create(data);
 
 export const updateContact = (id, data) => Contact.findByIdAndUpdate(id, data);
+
+export const updateContactStatus = (id, data) =>
+  Contact.findByIdAndUpdate(id, data);
