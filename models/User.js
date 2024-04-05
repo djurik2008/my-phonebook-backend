@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
 import { handleSaveError, setUpdateSetting } from "./hooks.js";
 import { emailRegexp } from "../constants/userConstants.js";
+import { string } from "joi";
 
 const userSchema = new Schema(
   {
@@ -18,6 +19,9 @@ const userSchema = new Schema(
       type: String,
       enum: ["starter", "pro", "business"],
       default: "starter",
+    },
+    avatarUrl: {
+      type: String,
     },
     token: {
       type: String,

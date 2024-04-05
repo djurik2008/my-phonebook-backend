@@ -1,14 +1,22 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import fs from "fs/promises";
+import path from "path";
+
 import * as authServices from "../services/authServices.js";
 import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
 
 const { JWT_SECRET } = process.env;
 
+const avatarPath = path.resolve("publick", "avatars");
+
 const signup = async (req, res) => {
   const { email, password } = req.body;
-
+  const { path: oldPath, fileName } = req.file;
+  const newPath = path.join(avatarPath, fileName);
+  await fs.rename(oldPath, newPath);
+  const avatar = path.join("publick", "avatars", fileName);
   const user = await authServices.findUser({ email });
 
   if (user) {
