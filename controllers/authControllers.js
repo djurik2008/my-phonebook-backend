@@ -39,7 +39,7 @@ const signin = async (req, res) => {
     throw HttpError(401, "Email or password invalid");
   }
 
-  const passwordCompare = bcrypt.compare(password, user.password);
+  const passwordCompare = await bcrypt.compare(password, user.password);
 
   if (!passwordCompare) {
     throw HttpError(401, "Email or password invalid");
@@ -73,9 +73,7 @@ const getCurrent = async (req, res) => {
 const signout = async (req, res) => {
   const { _id } = req.user;
   await authServices.updateUser({ _id }, { token: "" });
-  res.json({
-    message: "Signout success",
-  });
+  res.status(204).json();
 };
 
 const updateUserSubscription = async (req, res, next) => {
