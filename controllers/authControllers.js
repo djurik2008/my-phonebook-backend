@@ -2,6 +2,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import fs from "fs/promises";
 import path from "path";
+import gravatar from "gravatar";
+import Jimp from "jimp";
 
 import * as authServices from "../services/authServices.js";
 import HttpError from "../helpers/HttpError.js";
@@ -13,10 +15,6 @@ const avatarPath = path.resolve("publick", "avatars");
 
 const signup = async (req, res) => {
   const { email, password } = req.body;
-  const { path: oldPath, fileName } = req.file;
-  const newPath = path.join(avatarPath, fileName);
-  await fs.rename(oldPath, newPath);
-  const avatar = path.join("publick", "avatars", fileName);
   const user = await authServices.findUser({ email });
 
   if (user) {
@@ -24,9 +22,11 @@ const signup = async (req, res) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
+  const userAvatar = gravatar.url(email, { s: "250", d: "monsterid" });
 
   const newUser = await authServices.signup({
     ...req.body,
+    avatarUrl: userAvatar,
     password: hashPassword,
   });
 
@@ -47,7 +47,7 @@ const signin = async (req, res) => {
     throw HttpError(401, "Email or password invalid");
   }
 
-  const passwordCompare = bcrypt.compare(password, user.password);
+  const passwordCompare = await bcrypt.compare(password, user.password);
 
   if (!passwordCompare) {
     throw HttpError(401, "Email or password invalid");
@@ -81,9 +81,7 @@ const getCurrent = async (req, res) => {
 const signout = async (req, res) => {
   const { _id } = req.user;
   await authServices.updateUser({ _id }, { token: "" });
-  res.json({
-    message: "Signout success",
-  });
+  res.status(204).json();
 };
 
 const updateUserSubscription = async (req, res, next) => {
@@ -97,10 +95,29 @@ const updateUserSubscription = async (req, res, next) => {
   res.json(`Success, your subscription has update to ${newSubscription}`);
 };
 
+const updateUserAvatar = async (req, res) => {
+  if (!req.file) {
+    throw HttpError(400, "File was not uploaded");
+  }
+  const { _id: id } = req.user;
+  const { path: oldPath, filename } = req.file;
+  const resizeAvatar = await Jimp.read(oldPath);
+  resizeAvatar.resize(250, 250);
+  await resizeAvatar.writeAsync(oldPath);
+  const newPath = path.join(avatarPath, filename);
+  await fs.rename(oldPath, newPath);
+  const avatar = path.join("avatars", filename);
+  await authServices.updateUser({ _id: id }, { avatarUrl: avatar });
+  res.json({
+    avatarURL: avatar,
+  });
+};
+
 export default {
   signup: ctrlWrapper(signup),
   signin: ctrlWrapper(signin),
   getCurrent: ctrlWrapper(getCurrent),
   signout: ctrlWrapper(signout),
   updateUserSubscription: ctrlWrapper(updateUserSubscription),
+  updateUserAvatar: ctrlWrapper(updateUserAvatar),
 };
