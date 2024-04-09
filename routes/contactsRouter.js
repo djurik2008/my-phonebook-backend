@@ -1,5 +1,5 @@
 import express from "express";
-import contactsControllers from "../controllers/contactsControllers.js";
+import * as contactsControllers from "../controllers/contactsControllers";
 import {
   createContactSchema,
   updateContactSchema,
@@ -13,30 +13,30 @@ const contactsRouter = express.Router();
 
 contactsRouter.use(authenticate);
 
-contactsRouter.get("/", contactsControllers.getAllContacts);
+contactsRouter.get("/", contactsControllers.getAllContacts());
 
-contactsRouter.get("/:id", isValidId, contactsControllers.getOneContact);
+contactsRouter.get("/:id", isValidId, contactsControllers.getOneContact());
 
-contactsRouter.delete("/:id", isValidId, contactsControllers.deleteContact);
+contactsRouter.delete("/:id", isValidId, contactsControllers.deleteContact());
 
 contactsRouter.post(
   "/",
   validateBody(createContactSchema),
-  contactsControllers.createContact
+  contactsControllers.createContact()
 );
 
 contactsRouter.put(
   "/:id",
   isValidId,
   validateBody(updateContactSchema),
-  contactsControllers.updateContact
+  contactsControllers.updateContact()
 );
 
 contactsRouter.patch(
   "/:id/favorite",
   isValidId,
   validateBody(updateContactStatusSchema),
-  contactsControllers.updateContact
+  contactsControllers.updateContact()
 );
 
 export default contactsRouter;

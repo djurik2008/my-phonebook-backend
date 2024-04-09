@@ -7,13 +7,15 @@ const contactShema = new Schema(
       type: String,
       required: [true, "Set name for contact"],
     },
-    email: {
-      type: String,
-    },
     phone: {
       type: String,
+      required: [true, "Set phone for contact"],
     },
     favorite: {
+      type: Boolean,
+      default: false,
+    },
+    blacklist: {
       type: Boolean,
       default: false,
     },

@@ -1,5 +1,5 @@
 import express from "express";
-import authControllers from "../controllers/authControllers.js";
+import * as authControllers from "../controllers/authControllers";
 import {
   userSignupSchema,
   userSigninSchema,
@@ -14,31 +14,31 @@ const authRouter = express.Router();
 authRouter.post(
   "/register",
   validateBody(userSignupSchema),
-  authControllers.signup
+  authControllers.signup()
 );
 
 authRouter.post(
   "/login",
   validateBody(userSigninSchema),
-  authControllers.signin
+  authControllers.signin()
 );
 
-authRouter.get("/current", authenticate, authControllers.getCurrent);
+authRouter.get("/current", authenticate, authControllers.getCurrent());
 
-authRouter.post("/logout", authenticate, authControllers.signout);
+authRouter.post("/logout", authenticate, authControllers.signout());
 
 authRouter.patch(
   "/",
   authenticate,
   validateBody(updateUserSubscriptionSchema),
-  authControllers.updateUserSubscription
+  authControllers.updateUserSubscription()
 );
 
 authRouter.patch(
   "/avatars",
   upload.single("avatar"),
   authenticate,
-  authControllers.updateUserAvatar
+  authControllers.updateUserAvatar()
 );
 
 export default authRouter;

@@ -8,7 +8,7 @@ import contactsRouter from "./routes/contactsRouter.js";
 import authRouter from "./routes/authRouter.js";
 
 const app = express();
-const { DB_HOST, PORT } = process.env;
+const { DB_HOST, PORT = 3000 } = process.env;
 
 app.use(morgan("tiny"));
 app.use(cors());
