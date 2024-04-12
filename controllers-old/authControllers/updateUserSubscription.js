@@ -1,7 +1,8 @@
-import { updateUser } from "../../services/authServices.js";
-import HttpError from "../../helpers/HttpError.js";
+import { updateUser } from "../../services/authServices";
+import HttpError from "../../helpers/HttpError";
+import ctrlWrapper from "../../decorators/ctrlWrapper";
 
-export const updateUserSubscription = async (req, res, next) => {
+const updateUserSubscription = async (req, res, next) => {
   const { subscription: newSubscription } = req.body;
   const { subscription, _id: id } = req.user;
   if (newSubscription === subscription) {
@@ -10,4 +11,8 @@ export const updateUserSubscription = async (req, res, next) => {
   await updateUser({ _id: id }, { subscription: newSubscription });
 
   res.json(`Success, your subscription has update to ${newSubscription}`);
+};
+
+export default {
+  updateUserSubscription: ctrlWrapper(updateUserSubscription),
 };

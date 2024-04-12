@@ -1,7 +1,8 @@
-import HttpError from "../../helpers/HttpError.js";
-import { updateContactByFilter } from "../../services/contactsServices.js";
+import HttpError from "../../helpers/HttpError";
+import ctrlWrapper from "../../decorators/ctrlWrapper";
+import { updateContactByFilter } from "../../services/contactsServices";
 
-export const updateContact = async (req, res) => {
+const updateContact = async (req, res) => {
   if (Object.keys(req.body).length === 0) {
     throw HttpError(400, "Body must have at least one field");
   }
@@ -12,4 +13,8 @@ export const updateContact = async (req, res) => {
     throw HttpError(404, `Contact with id: ${id} not found`);
   }
   res.json(result);
+};
+
+export default {
+  updateContact: ctrlWrapper(updateContact),
 };

@@ -1,9 +1,7 @@
-import {
-  listContacts,
-  countContacts,
-} from "../../services/contactsServices.js";
+import { listContacts, countContacts } from "../../services/contactsServices";
+import ctrlWrapper from "../../decorators/ctrlWrapper";
 
-export const getAllContacts = async (req, res) => {
+const getAllContacts = async (req, res) => {
   const { _id: owner } = req.user;
   const { page = 1, limit = 20 } = req.query;
   const skip = (page - 1) * limit;
@@ -19,4 +17,8 @@ export const getAllContacts = async (req, res) => {
     result,
     total,
   });
+};
+
+export default {
+  getAllContacts: ctrlWrapper(getAllContacts),
 };

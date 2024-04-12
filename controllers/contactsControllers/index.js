@@ -1,5 +1,15 @@
-export { default as getAllContacts } from "./getAllContacts.js";
-export { default as getOneContact } from "./getOneContact.js";
-export { default as deleteContact } from "./deleteContact.js";
-export { default as createContact } from "./createContact.js";
-export { default as updateContact } from "./updateContact.js";
+import ctrlWrapper from "../../decorators/ctrlWrapper.js";
+
+import { createContact } from "./createContact.js";
+import { deleteContact } from "./deleteContact.js";
+import { getAllContacts } from "./getAllContacts.js";
+import { getOneContact } from "./getOneContact.js";
+import { updateContact } from "./updateContact.js";
+
+export default {
+  createContact: ctrlWrapper(createContact),
+  deleteContact: ctrlWrapper(deleteContact),
+  getAllContacts: ctrlWrapper(getAllContacts),
+  getOneContact: ctrlWrapper(getOneContact),
+  updateContact: ctrlWrapper(updateContact),
+};

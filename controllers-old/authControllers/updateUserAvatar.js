@@ -1,12 +1,14 @@
 import fs from "fs/promises";
 import path from "path";
 import Jimp from "jimp";
-import HttpError from "../../helpers/HttpError.js";
-import { updateUser } from "../../services/authServices.js";
+import fs from "fs/promises";
+import HttpError from "../../helpers/HttpError";
+import { updateUser } from "../../services/authServices";
+import ctrlWrapper from "../../decorators/ctrlWrapper";
 
 const avatarPath = path.resolve("public", "avatars");
 
-export const updateUserAvatar = async (req, res) => {
+const updateUserAvatar = async (req, res) => {
   if (!req.file) {
     throw HttpError(400, "File was not uploaded");
   }
@@ -29,4 +31,8 @@ export const updateUserAvatar = async (req, res) => {
   res.json({
     avatarURL: avatar,
   });
+};
+
+export default {
+  updateUserAvatar: ctrlWrapper(updateUserAvatar),
 };

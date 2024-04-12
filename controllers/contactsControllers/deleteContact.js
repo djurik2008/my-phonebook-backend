@@ -1,8 +1,7 @@
-import HttpError from "../../helpers/HttpError";
-import ctrlWrapper from "../../decorators/ctrlWrapper";
-import { removeContactByFilter } from "../../services/contactsServices";
+import HttpError from "../../helpers/HttpError.js";
+import { removeContactByFilter } from "../../services/contactsServices.js";
 
-const deleteContact = async (req, res) => {
+export const deleteContact = async (req, res) => {
   const { _id: owner } = req.user;
   const { id } = req.params;
   const result = await removeContactByFilter({
@@ -13,8 +12,4 @@ const deleteContact = async (req, res) => {
     throw HttpError(404, `Contact with id: ${id} not found`);
   }
   res.json(result);
-};
-
-export default {
-  deleteContact: ctrlWrapper(deleteContact),
 };

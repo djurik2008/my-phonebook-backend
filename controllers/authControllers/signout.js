@@ -1,12 +1,7 @@
-import { updateUser } from "../../services/authServices";
-import ctrlWrapper from "../../decorators/ctrlWrapper";
+import { updateUser } from "../../services/authServices.js";
 
-const signout = async (req, res) => {
+export const signout = async (req, res) => {
   const { _id } = req.user;
   await updateUser({ _id }, { token: "" });
   res.status(204).json();
-};
-
-export default {
-  signout: ctrlWrapper(signout),
 };

@@ -1,21 +1,18 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { findUser, updateUser } from "../../services/authServices.js";
-import HttpError from "../../helpers/HttpError.js";
+import { findUser, updateUser } from "../../services/authServices";
+import ctrlWrapper from "../../decorators/ctrlWrapper";
+import HttpError from "../../helpers/HttpError";
 
 const { JWT_SECRET } = process.env;
 
-export const signin = async (req, res) => {
+const signin = async (req, res) => {
   const { email, password } = req.body;
 
   const user = await findUser({ email });
 
   if (!user) {
     throw HttpError(401, "Email or password invalid");
-  }
-
-  if (!user.verify) {
-    throw HttpError(401, "Please, verify your email first");
   }
 
   const passwordCompare = await bcrypt.compare(password, user.password);
@@ -41,4 +38,8 @@ export const signin = async (req, res) => {
       avatarUrl: user.avatarUrl,
     },
   });
+};
+
+export default {
+  signin: ctrlWrapper(signin),
 };

@@ -1,8 +1,7 @@
-import HttpError from "../../helpers/HttpError";
-import ctrlWrapper from "../../decorators/ctrlWrapper";
-import { getContactByFilter } from "../../services/contactsServices";
+import HttpError from "../../helpers/HttpError.js";
+import { getContactByFilter } from "../../services/contactsServices.js";
 
-const getOneContact = async (req, res) => {
+export const getOneContact = async (req, res) => {
   const { _id: owner } = req.user;
   const { id } = req.params;
   const result = await getContactByFilter({ owner, _id: id });
@@ -10,8 +9,4 @@ const getOneContact = async (req, res) => {
     throw HttpError(404, `Contact with id: ${id} not found`);
   }
   res.json(result);
-};
-
-export default {
-  getOneContact: ctrlWrapper(getOneContact),
 };

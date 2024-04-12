@@ -1,9 +1,10 @@
 import express from "express";
-import * as authControllers from "../controllers/authControllers";
+import authControllers from "../controllers/authControllers/index.js";
 import {
   userSignupSchema,
   userSigninSchema,
   updateUserSubscriptionSchema,
+  userEmailSchema,
 } from "../schemas/usersSchemas.js";
 import validateBody from "../decorators/validateBody.js";
 import authenticate from "../middlewares/authenticate.js";
@@ -17,28 +18,36 @@ authRouter.post(
   authControllers.signup()
 );
 
+authRouter.get("/verify/:verificationToken", authControllers.verify);
+
+authRouter.post(
+  "/verify",
+  validateBody(userEmailSchema),
+  authControllers.resendVerify
+);
+
 authRouter.post(
   "/login",
   validateBody(userSigninSchema),
   authControllers.signin()
 );
 
-authRouter.get("/current", authenticate, authControllers.getCurrent());
+authRouter.get("/current", authenticate, authControllers.getCurrent);
 
-authRouter.post("/logout", authenticate, authControllers.signout());
+authRouter.post("/logout", authenticate, authControllers.signout);
 
 authRouter.patch(
   "/",
   authenticate,
   validateBody(updateUserSubscriptionSchema),
-  authControllers.updateUserSubscription()
+  authControllers.updateUserSubscription
 );
 
 authRouter.patch(
   "/avatars",
   upload.single("avatar"),
   authenticate,
-  authControllers.updateUserAvatar()
+  authControllers.updateUserAvatar
 );
 
 export default authRouter;
