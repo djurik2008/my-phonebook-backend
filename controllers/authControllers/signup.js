@@ -36,8 +36,11 @@ export const signup = async (req, res) => {
 
   res.status(201).json({
     user: {
+      username: newUser.username,
       email: newUser.email,
+      avatarUrl: userAvatar,
       subscription: newUser.subscription,
     },
+    verificationToken,
   });
 };
