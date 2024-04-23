@@ -6,6 +6,8 @@ import { updateUser } from "../../services/authServices.js";
 
 const avatarPath = path.resolve("public", "avatars");
 
+const { PROJECT_URL } = process.env;
+
 export const updateUserAvatar = async (req, res) => {
   if (!req.file) {
     throw HttpError(400, "File was not uploaded");
@@ -23,8 +25,9 @@ export const updateUserAvatar = async (req, res) => {
   await fs.rename(oldPath, newPath);
 
   const avatar = path.join("avatars", filename);
+  const avatarUrl = `${PROJECT_URL}/${avatar}`;
 
-  await updateUser({ _id: id }, { avatarUrl: avatar });
+  await updateUser({ _id: id }, { avatarUrl });
 
   res.json({
     avatarURL: avatar,
