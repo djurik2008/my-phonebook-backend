@@ -30,6 +30,6 @@ export const updateUserAvatar = async (req, res) => {
   await updateUser({ _id: id }, { avatarUrl });
 
   res.json({
-    avatarURL: avatar,
+    avatarURL: avatarUrl,
   });
 };
